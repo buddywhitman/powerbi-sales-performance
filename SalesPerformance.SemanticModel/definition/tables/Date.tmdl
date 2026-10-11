@@ -1,0 +1,66 @@
+table Date
+	dataCategory: Time
+
+	column Date
+		dataType: dateTime
+		isKey
+		formatString: dd-MMM-yyyy
+		summarizeBy: none
+		sourceColumn: Date
+
+	column Year
+		dataType: int64
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: Year
+
+	column Quarter
+		dataType: string
+		summarizeBy: none
+		sourceColumn: Quarter
+
+	column 'Month Number'
+		dataType: int64
+		isHidden
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: Month Number
+
+	column Month
+		dataType: string
+		sortByColumn: 'Month Number'
+		summarizeBy: none
+		sourceColumn: Month
+
+	column 'Year-Month'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: Year-Month
+
+	hierarchy 'Date Hierarchy'
+
+		level Year
+			column: Year
+
+		level Quarter
+			column: Quarter
+
+		level Month
+			column: Month
+
+	partition Date = m
+		mode: import
+		source =
+			let
+				StartDate = #date(2022, 1, 1),
+				EndDate = #date(2024, 12, 31),
+				Days = List.Dates(StartDate, Duration.Days(EndDate - StartDate) + 1, #duration(1, 0, 0, 0)),
+				AsTable = Table.FromList(Days, Splitter.SplitByNothing(), {"Date"}, null, ExtraValues.Error),
+				Typed = Table.TransformColumnTypes(AsTable, {{"Date", type date}}),
+				WithYear = Table.AddColumn(Typed, "Year", each Date.Year([Date]), Int64.Type),
+				WithQuarter = Table.AddColumn(WithYear, "Quarter", each "Q" & Text.From(Date.QuarterOfYear([Date])), type text),
+				WithMonthNum = Table.AddColumn(WithQuarter, "Month Number", each Date.Month([Date]), Int64.Type),
+				WithMonth = Table.AddColumn(WithMonthNum, "Month", each Date.ToText([Date], "MMM"), type text),
+				WithYM = Table.AddColumn(WithMonth, "Year-Month", each Date.ToText([Date], "yyyy-MM"), type text)
+			in
+				WithYM

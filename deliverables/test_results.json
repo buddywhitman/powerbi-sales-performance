@@ -1,0 +1,140 @@
+{
+ "results": [
+  {
+   "test": "Total Sales reconciles to Excel",
+   "area": "Functionality",
+   "expected": 1247941.61,
+   "actual": 1247941.61,
+   "pass": true,
+   "ms": 1560
+  },
+  {
+   "test": "Total Target reconciles to Excel",
+   "area": "Functionality",
+   "expected": 1623770.12,
+   "actual": 1623770.12,
+   "pass": true,
+   "ms": 1581
+  },
+  {
+   "test": "Distinct orders = 500",
+   "area": "Functionality",
+   "expected": 500,
+   "actual": 500.0,
+   "pass": true,
+   "ms": 1583
+  },
+  {
+   "test": "Gross Profit = Sales - COGS",
+   "area": "Functionality",
+   "expected": 0,
+   "actual": 0.0,
+   "pass": true,
+   "ms": 1670
+  },
+  {
+   "test": "Region filter (South) vs Excel",
+   "area": "Cross-filtering",
+   "expected": 299231.47000000003,
+   "actual": 299231.47,
+   "pass": true,
+   "ms": 1575
+  },
+  {
+   "test": "Year filter via Date table (2024) vs Excel",
+   "area": "Cross-filtering",
+   "expected": 476169.33,
+   "actual": 476169.33,
+   "pass": true,
+   "ms": 1645
+  },
+  {
+   "test": "Category totals add to grand total",
+   "area": "Cross-filtering",
+   "expected": 0,
+   "actual": -2.3283064365386963e-10,
+   "pass": true,
+   "ms": 1592
+  },
+  {
+   "test": "Sales PY (2024) equals 2023 sales",
+   "area": "Functionality",
+   "expected": 0,
+   "actual": 0.0,
+   "pass": true,
+   "ms": 1555
+  },
+  {
+   "test": "Scenario at defaults equals baseline",
+   "area": "Parameters",
+   "expected": 0,
+   "actual": 0.0,
+   "pass": true,
+   "ms": 1615
+  },
+  {
+   "test": "Price Change what-if has 31 steps (-15%..+15%)",
+   "area": "Parameters",
+   "expected": 31,
+   "actual": 31.0,
+   "pass": true,
+   "ms": 1850
+  },
+  {
+   "test": "Metric Selector field parameter has 6 fields",
+   "area": "Parameters",
+   "expected": 6,
+   "actual": 6.0,
+   "pass": true,
+   "ms": 1575
+  },
+  {
+   "test": "View By field parameter has 6 fields",
+   "area": "Parameters",
+   "expected": 6,
+   "actual": 6.0,
+   "pass": true,
+   "ms": 1635
+  },
+  {
+   "test": "What-if math: +10% price => sales x1.10",
+   "area": "Parameters",
+   "expected": 0,
+   "actual": 0.0,
+   "pass": true,
+   "ms": 1587
+  },
+  {
+   "test": "Drill-through key (Sales Rep) resolves for every rep",
+   "area": "Drill-through",
+   "expected": 7,
+   "actual": 7.0,
+   "pass": true,
+   "ms": 1930
+  },
+  {
+   "test": "Dynamic title measures evaluate to text",
+   "area": "Parameters",
+   "expected": "5 non-empty strings",
+   "actual": {
+    "[t]": "Top region: South ($299,231)",
+    "[e]": "Sales by Region",
+    "[s]": "Scenario: price 0%, volume 0%, cost inflation 0%",
+    "[r]": "Sales rep profile: All reps",
+    "[c]": "2022-2024  |  All regions  |  All categories"
+   },
+   "pass": true,
+   "ms": 1855
+  }
+ ],
+ "perf": {
+  "heavy_query_ms": [
+   2125,
+   2102,
+   2274,
+   1861,
+   1999
+  ],
+  "median_ms": 2102
+ }
+}

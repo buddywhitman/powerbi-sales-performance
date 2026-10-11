@@ -1,0 +1,42 @@
+table 'Metric Selector'
+
+	column 'Metric Selector'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: [Value1]
+		sortByColumn: 'Metric Selector Order'
+
+		relatedColumnDetails
+			groupByColumn: 'Metric Selector Fields'
+
+	column 'Metric Selector Fields'
+		dataType: string
+		isHidden
+		summarizeBy: none
+		sourceColumn: [Value2]
+		sortByColumn: 'Metric Selector Order'
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 3,
+				  "kind": 2
+				}
+
+	column 'Metric Selector Order'
+		dataType: int64
+		isHidden
+		formatString: 0
+		summarizeBy: sum
+		sourceColumn: [Value3]
+
+	partition 'Metric Selector' = calculated
+		mode: import
+		source =
+				{
+					("Sales", NAMEOF(Sales[Total Sales]), 0),
+					("Gross Profit", NAMEOF(Sales[Gross Profit]), 1),
+					("Orders", NAMEOF(Sales[Orders]), 2),
+					("Units Sold", NAMEOF(Sales[Units Sold]), 3),
+					("Avg Order Value", NAMEOF(Sales[Avg Order Value]), 4),
+					("Target Attainment", NAMEOF(Sales[Target Attainment %]), 5)
+				}

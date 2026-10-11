@@ -1,0 +1,382 @@
+table Sales
+	/// Sum of order sales amount
+	measure 'Total Sales' = SUM(Sales[Sales Amount])
+		formatString: $#,0
+		displayFolder: 1 Core
+
+	measure 'Total Target' = SUM(Sales[Target Amount])
+		formatString: $#,0
+		displayFolder: 1 Core
+
+	measure 'Total Budget' = SUM(Sales[Budget Amount])
+		formatString: $#,0
+		displayFolder: 1 Core
+
+	measure 'Total COGS' = SUM(Sales[COGS Amount])
+		formatString: $#,0
+		displayFolder: 1 Core
+
+	/// Sales minus cost of goods sold
+	measure 'Gross Profit' = [Total Sales] - [Total COGS]
+		formatString: $#,0
+		displayFolder: 1 Core
+
+	measure 'Gross Margin %' = DIVIDE([Gross Profit], [Total Sales])
+		formatString: 0.0%
+		displayFolder: 1 Core
+
+	measure Orders = DISTINCTCOUNT(Sales[Order ID])
+		formatString: #,0
+		displayFolder: 1 Core
+
+	measure 'Units Sold' = SUM(Sales[Quantity])
+		formatString: #,0
+		displayFolder: 1 Core
+
+	measure 'Avg Order Value' = DIVIDE([Total Sales], [Orders])
+		formatString: $#,0
+		displayFolder: 1 Core
+
+	measure Customers = DISTINCTCOUNT(Sales[Customer Name])
+		formatString: #,0
+		displayFolder: 1 Core
+
+	measure 'Avg Satisfaction' = AVERAGE(Sales[Satisfaction Score])
+		formatString: 0.0
+		displayFolder: 1 Core
+
+	measure 'Avg Discount %' = DIVIDE(AVERAGE(Sales[Discount Pct]), 100)
+		formatString: 0.0%
+		displayFolder: 1 Core
+
+	/// Order-level margin as reported in the source data
+	measure 'Avg Profit Margin %' = DIVIDE(AVERAGE(Sales[Profit Margin Pct]), 100)
+		formatString: 0.0%
+		displayFolder: 1 Core
+
+	measure 'Target Attainment %' = DIVIDE([Total Sales], [Total Target])
+		formatString: 0.0%
+		displayFolder: 2 Performance
+
+	measure 'Variance to Target' = [Total Sales] - [Total Target]
+		formatString: $#,0;-$#,0
+		displayFolder: 2 Performance
+
+	measure 'Variance to Budget' = [Total Sales] - [Total Budget]
+		formatString: $#,0;-$#,0
+		displayFolder: 2 Performance
+
+	measure 'Budget Attainment %' = DIVIDE([Total Sales], [Total Budget])
+		formatString: 0.0%
+		displayFolder: 2 Performance
+
+	/// Share of orders reaching at least 75% of their target
+	measure 'Orders On Track %' = DIVIDE(CALCULATE([Orders], Sales[Target Status] = "On Track"), [Orders])
+		formatString: 0.0%
+		displayFolder: 2 Performance
+
+	measure 'Closed Sales' = CALCULATE([Total Sales], Sales[Sales Stage] = "Closed")
+		formatString: $#,0
+		displayFolder: 2 Performance
+
+	measure 'Close Rate %' = DIVIDE(CALCULATE([Orders], Sales[Sales Stage] = "Closed"), [Orders])
+		formatString: 0.0%
+		displayFolder: 2 Performance
+
+	/// Hex color driven by attainment, used for conditional formatting
+	measure 'Target Status Color' = IF([Target Attainment %] >= 1, "#2E7D32", IF([Target Attainment %] >= 0.9, "#F9A825", "#C62828"))
+		displayFolder: 2 Performance
+
+	measure 'Sales PY' = CALCULATE([Total Sales], SAMEPERIODLASTYEAR('Date'[Date]))
+		formatString: $#,0
+		displayFolder: 3 Time Intelligence
+
+	measure 'Sales YoY %' = DIVIDE([Total Sales] - [Sales PY], [Sales PY])
+		formatString: +0.0%;-0.0%;0.0%
+		displayFolder: 3 Time Intelligence
+
+	measure 'Sales YTD' = TOTALYTD([Total Sales], 'Date'[Date])
+		formatString: $#,0
+		displayFolder: 3 Time Intelligence
+
+	measure 'Sales Rolling 3M' = CALCULATE([Total Sales], DATESINPERIOD('Date'[Date], MAX('Date'[Date]), -3, MONTH))
+		formatString: $#,0
+		displayFolder: 3 Time Intelligence
+
+	/// Subtitle that echoes the active slicer context
+	measure 'Selection Context' = ```
+			VAR r = IF(ISFILTERED(Sales[Region]), CONCATENATEX(VALUES(Sales[Region]), Sales[Region], ", "), "All regions")
+			VAR y = IF(ISFILTERED('Date'[Year]), CONCATENATEX(VALUES('Date'[Year]), 'Date'[Year], ", "), "2022-2024")
+			VAR c = IF(ISFILTERED(Sales[Product Category]), CONCATENATEX(VALUES(Sales[Product Category]), Sales[Product Category], ", "), "All categories")
+			RETURN y & "  |  " & r & "  |  " & c
+			```
+		displayFolder: 4 Dynamic Text
+
+	measure 'Title Sales Trend' = "Sales vs Target and Budget - " & IF(ISFILTERED('Date'[Year]), CONCATENATEX(VALUES('Date'[Year]), 'Date'[Year], ", "), "all years")
+		displayFolder: 4 Dynamic Text
+
+	measure 'Title Top Performer' = ```
+			VAR t = TOPN(1, ALLSELECTED(Sales[Region]), [Total Sales])
+			RETURN "Top region: " & MAXX(t, Sales[Region]) & " (" & FORMAT(CALCULATE([Total Sales], t), "$#,0") & ")"
+			```
+		displayFolder: 4 Dynamic Text
+
+	/// Title that follows both field parameters
+	measure 'Title Explorer' = SWITCH(SELECTEDVALUE('Metric Selector'[Metric Selector Order], 0), 0, "Sales", 1, "Gross Profit", 2, "Orders", 3, "Units Sold", 4, "Avg Order Value", 5, "Target Attainment", "Sales") & " by " & SWITCH(SELECTEDVALUE('View By'[View By Order], 0), 0, "Region", 1, "Product Category", 2, "Customer Segment", 3, "Channel", 4, "Age Group", 5, "Sales Stage", "Region")
+		displayFolder: 4 Dynamic Text
+
+	measure 'Title Scenario' = "Scenario: price " & FORMAT([Price Change Value], "+0%;-0%;0%") & ", volume " & FORMAT([Volume Change Value], "+0%;-0%;0%") & ", cost inflation " & FORMAT([Cost Inflation Value], "+0%;-0%;0%")
+		displayFolder: 4 Dynamic Text
+
+	measure 'Rep Detail Title' = "Sales rep profile: " & SELECTEDVALUE(Sales[Sales Rep], "All reps")
+		displayFolder: 4 Dynamic Text
+
+	measure 'Scenario Sales' = [Total Sales] * (1 + [Price Change Value]) * (1 + [Volume Change Value])
+		formatString: $#,0
+		displayFolder: 5 Scenario
+
+	measure 'Scenario COGS' = [Total COGS] * (1 + [Volume Change Value]) * (1 + [Cost Inflation Value])
+		formatString: $#,0
+		displayFolder: 5 Scenario
+
+	measure 'Scenario Profit' = [Scenario Sales] - [Scenario COGS]
+		formatString: $#,0
+		displayFolder: 5 Scenario
+
+	measure 'Scenario Margin %' = DIVIDE([Scenario Profit], [Scenario Sales])
+		formatString: 0.0%
+		displayFolder: 5 Scenario
+
+	measure 'Scenario Sales Impact' = [Scenario Sales] - [Total Sales]
+		formatString: $#,0;-$#,0
+		displayFolder: 5 Scenario
+
+	measure 'Scenario Profit Impact' = [Scenario Profit] - [Gross Profit]
+		formatString: $#,0;-$#,0
+		displayFolder: 5 Scenario
+
+	measure 'Scenario Target Attainment %' = DIVIDE([Scenario Sales], [Total Target])
+		formatString: 0.0%
+		displayFolder: 5 Scenario
+
+	column 'Order ID'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: OrderID
+
+	column 'Order Date'
+		dataType: dateTime
+		formatString: dd-MMM-yyyy
+		isHidden
+		summarizeBy: none
+		sourceColumn: Date
+
+	column 'Month Name (Src)'
+		dataType: string
+		isHidden
+		summarizeBy: none
+		sourceColumn: Month
+
+	column 'Month Number (Src)'
+		dataType: int64
+		formatString: 0
+		isHidden
+		summarizeBy: none
+		sourceColumn: MonthNumber
+
+	column Region
+		dataType: string
+		summarizeBy: none
+		sourceColumn: Region
+
+	column 'Product Category'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: ProductCategory
+
+	column 'Product Subcategory'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: ProductSubcategory
+
+	column 'Sales Amount'
+		dataType: double
+		formatString: $#,0.00
+		summarizeBy: none
+		sourceColumn: SalesAmount
+
+	column Quantity
+		dataType: int64
+		formatString: #,0
+		summarizeBy: none
+		sourceColumn: Quantity
+
+	column 'Profit Margin Pct'
+		dataType: double
+		formatString: 0.0"%"
+		summarizeBy: none
+		sourceColumn: ProfitMargin
+
+	column 'Age Group'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: CustomerAgeGroup
+
+	column 'Customer Segment'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: CustomerSegment
+
+	column 'Discount Pct'
+		dataType: double
+		formatString: 0.0"%"
+		summarizeBy: none
+		sourceColumn: DiscountApplied
+
+	column 'Target Amount'
+		dataType: double
+		formatString: $#,0.00
+		summarizeBy: none
+		sourceColumn: Target
+
+	column 'Sales Stage'
+		dataType: string
+		sortByColumn: 'Stage Order'
+		summarizeBy: none
+		sourceColumn: SalesStage
+
+	column 'Category Rank'
+		dataType: int64
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: CategoryRank
+
+	column 'Sales Delta'
+		dataType: double
+		formatString: $#,0.00
+		summarizeBy: none
+		sourceColumn: SalesDelta
+
+	column 'Year (Src)'
+		dataType: int64
+		formatString: 0
+		isHidden
+		summarizeBy: none
+		sourceColumn: Year
+
+	column 'Quarter (Src)'
+		dataType: string
+		isHidden
+		summarizeBy: none
+		sourceColumn: Quarter
+
+	column 'Budget Amount'
+		dataType: double
+		formatString: $#,0.00
+		summarizeBy: none
+		sourceColumn: BudgetAmount
+
+	column Channel
+		dataType: string
+		summarizeBy: none
+		sourceColumn: Channel
+
+	column 'Store Sq Ft'
+		dataType: int64
+		formatString: #,0
+		summarizeBy: none
+		sourceColumn: SquareFootage
+
+	column 'Satisfaction Score'
+		dataType: int64
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: CustSatScore
+
+	column 'COGS Amount'
+		dataType: double
+		formatString: $#,0.00
+		summarizeBy: none
+		sourceColumn: COGS
+
+	column 'Customer Name'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: CustomerName
+
+	column 'Sales Rep'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: SalesRep
+
+	column Country
+		dataType: string
+		summarizeBy: none
+		sourceColumn: Country
+
+	column 'Target Status'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: TargetStatus
+
+	column 'Discount Band'
+		dataType: string
+		sortByColumn: 'Discount Band Order'
+		summarizeBy: none
+		sourceColumn: DiscountBand
+
+	column 'Discount Band Order'
+		dataType: int64
+		formatString: 0
+		isHidden
+		summarizeBy: none
+		sourceColumn: DiscountBandOrder
+
+	column 'Stage Order'
+		dataType: int64
+		formatString: 0
+		isHidden
+		summarizeBy: none
+		sourceColumn: StageOrder
+
+	hierarchy 'Product Hierarchy'
+
+		level 'Product Category'
+			column: 'Product Category'
+
+		level 'Product Subcategory'
+			column: 'Product Subcategory'
+
+	hierarchy 'Geography Hierarchy'
+
+		level Region
+			column: Region
+
+		level Country
+			column: Country
+
+	hierarchy 'Customer Hierarchy'
+
+		level 'Customer Segment'
+			column: 'Customer Segment'
+
+		level 'Age Group'
+			column: 'Age Group'
+
+		level 'Customer Name'
+			column: 'Customer Name'
+
+	partition Sales = m
+		mode: import
+		source =
+			let
+				Source = Excel.Workbook(File.Contents(SourcePath), null, true),
+				DataSheet = Source{[Item="Data", Kind="Sheet"]}[Data],
+				Promoted = Table.PromoteHeaders(DataSheet, [PromoteAllScalars=true]),
+				Typed = Table.TransformColumnTypes(Promoted, {{"OrderID", type text}, {"Date", type date}, {"Month", type text}, {"MonthNumber", Int64.Type}, {"Region", type text}, {"ProductCategory", type text}, {"ProductSubcategory", type text}, {"SalesAmount", type number}, {"Quantity", Int64.Type}, {"ProfitMargin", type number}, {"CustomerAgeGroup", type text}, {"CustomerSegment", type text}, {"DiscountApplied", type number}, {"Target", type number}, {"SalesStage", type text}, {"CategoryRank", Int64.Type}, {"SalesDelta", type number}, {"Year", Int64.Type}, {"Quarter", type text}, {"BudgetAmount", type number}, {"Channel", type text}, {"SquareFootage", Int64.Type}, {"CustSatScore", Int64.Type}, {"COGS", type number}, {"CustomerName", type text}, {"SalesRep", type text}, {"Country", type text}}),
+				WithStatus = Table.AddColumn(Typed, "TargetStatus", each if [SalesAmount] >= 0.75 * [Target] then "On Track" else "At Risk", type text),
+				WithBand = Table.AddColumn(WithStatus, "DiscountBand", each if [DiscountApplied] < 10 then "Low (<10%)" else if [DiscountApplied] < 20 then "Medium (10-20%)" else "High (20%+)", type text),
+				WithBandOrder = Table.AddColumn(WithBand, "DiscountBandOrder", each if [DiscountApplied] < 10 then 1 else if [DiscountApplied] < 20 then 2 else 3, Int64.Type),
+				WithStage = Table.AddColumn(WithBandOrder, "StageOrder", each if [SalesStage] = "Lead" then 1 else if [SalesStage] = "Qualified" then 2 else if [SalesStage] = "Proposal" then 3 else if [SalesStage] = "Negotiation" then 4 else 5, Int64.Type)
+			in
+				WithStage

@@ -1,0 +1,21 @@
+table 'Volume Change'
+
+	/// What-if: percentage change in units sold
+	measure 'Volume Change Value' = SELECTEDVALUE('Volume Change'[Volume Change], 0)
+		formatString: 0%
+		displayFolder: What-If
+
+	column 'Volume Change'
+		dataType: double
+		formatString: 0%
+		summarizeBy: none
+		sourceColumn: [Value]
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 0
+				}
+
+	partition 'Volume Change' = calculated
+		mode: import
+		source = GENERATESERIES(-0.25, 0.25, 0.01)

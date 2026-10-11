@@ -1,0 +1,159 @@
+{
+ "KPI": {
+  "columns": [
+   "[Total Sales]",
+   "[Total Target]",
+   "[Attainment]",
+   "[Gross Profit]",
+   "[Margin]",
+   "[Orders]",
+   "[AOV]"
+  ],
+  "rows": [
+   {
+    "[Total Sales]": "476169.33",
+    "[Total Target]": "615563.8",
+    "[Attainment]": "0.7735499228512137",
+    "[Gross Profit]": "156162.31",
+    "[Margin]": "0.3279554145160924",
+    "[Orders]": "193",
+    "[AOV]": "2467.1986010362693"
+   }
+  ]
+ },
+ "Category": {
+  "columns": [
+   "Sales[Product Category]",
+   "[Total Sales]",
+   "[Total Target]",
+   "[Attainment]",
+   "[Gross Profit]",
+   "[Margin]",
+   "[Orders]"
+  ],
+  "rows": [
+   {
+    "Sales[Product Category]": "Clothing",
+    "[Total Sales]": "136177.46",
+    "[Total Target]": "171126.67",
+    "[Attainment]": "0.7957699404774252",
+    "[Gross Profit]": "45086.73999999999",
+    "[Margin]": "0.33108812574415764",
+    "[Orders]": "58"
+   },
+   {
+    "Sales[Product Category]": "Sports",
+    "[Total Sales]": "130678.86",
+    "[Total Target]": "169909.73",
+    "[Attainment]": "0.7691075725916343",
+    "[Gross Profit]": "43916.22",
+    "[Margin]": "0.3360621603218761",
+    "[Orders]": "48"
+   },
+   {
+    "Sales[Product Category]": "Electronics",
+    "[Total Sales]": "107961.65",
+    "[Total Target]": "143051.5",
+    "[Attainment]": "0.7547047741547624",
+    "[Gross Profit]": "34940.92999999999",
+    "[Margin]": "0.32364205252513273",
+    "[Orders]": "44"
+   },
+   {
+    "Sales[Product Category]": "Home",
+    "[Total Sales]": "101351.36",
+    "[Total Target]": "131475.9",
+    "[Attainment]": "0.7708740537239145",
+    "[Gross Profit]": "32218.42",
+    "[Margin]": "0.3178883835401913",
+    "[Orders]": "43"
+   }
+  ]
+ },
+ "Region": {
+  "columns": [
+   "Sales[Region]",
+   "[Total Sales]",
+   "[Total Target]",
+   "[Variance]",
+   "[Attainment]",
+   "[Orders]"
+  ],
+  "rows": [
+   {
+    "Sales[Region]": "South",
+    "[Total Sales]": "136544.69",
+    "[Total Target]": "178532.95",
+    "[Variance]": "-41988.26000000001",
+    "[Attainment]": "0.7648150663504971",
+    "[Orders]": "49"
+   },
+   {
+    "Sales[Region]": "West",
+    "[Total Sales]": "112929.06",
+    "[Total Target]": "146728.05",
+    "[Variance]": "-33798.98999999999",
+    "[Attainment]": "0.7696487481432487",
+    "[Orders]": "46"
+   },
+   {
+    "Sales[Region]": "East",
+    "[Total Sales]": "78632.04",
+    "[Total Target]": "102886.03",
+    "[Variance]": "-24253.990000000005",
+    "[Attainment]": "0.7642635253785183",
+    "[Orders]": "36"
+   },
+   {
+    "Sales[Region]": "Central",
+    "[Total Sales]": "74581.05",
+    "[Total Target]": "94281.73",
+    "[Variance]": "-19700.679999999993",
+    "[Attainment]": "0.7910445639892268",
+    "[Orders]": "37"
+   },
+   {
+    "Sales[Region]": "North",
+    "[Total Sales]": "73482.49",
+    "[Total Target]": "93135.04",
+    "[Variance]": "-19652.54999999999",
+    "[Attainment]": "0.7889886556123239",
+    "[Orders]": "25"
+   }
+  ]
+ },
+ "Quarter": {
+  "columns": [
+   "Date[Year]",
+   "Date[Quarter]",
+   "[Total Sales]",
+   "[Total Target]"
+  ],
+  "rows": [
+   {
+    "Date[Year]": "2024",
+    "Date[Quarter]": "Q1",
+    "[Total Sales]": "120877.65",
+    "[Total Target]": "157012.02"
+   },
+   {
+    "Date[Year]": "2024",
+    "Date[Quarter]": "Q2",
+    "[Total Sales]": "123815.1",
+    "[Total Target]": "155056.22"
+   },
+   {
+    "Date[Year]": "2024",
+    "Date[Quarter]": "Q3",
+    "[Total Sales]": "89551.57",
+    "[Total Target]": "118806.67"
+   },
+   {
+    "Date[Year]": "2024",
+    "Date[Quarter]": "Q4",
+    "[Total Sales]": "141925.01",
+    "[Total Target]": "184688.89"
+   }
+  ]
+ }
+}

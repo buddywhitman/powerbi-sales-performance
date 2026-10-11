@@ -1,0 +1,21 @@
+table 'Cost Inflation'
+
+	/// What-if: percentage increase in cost of goods sold
+	measure 'Cost Inflation Value' = SELECTEDVALUE('Cost Inflation'[Cost Inflation], 0)
+		formatString: 0%
+		displayFolder: What-If
+
+	column 'Cost Inflation'
+		dataType: double
+		formatString: 0%
+		summarizeBy: none
+		sourceColumn: [Value]
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 0
+				}
+
+	partition 'Cost Inflation' = calculated
+		mode: import
+		source = GENERATESERIES(0, 0.2, 0.01)

@@ -1,0 +1,1 @@
+expression SourcePath = "D:\OneDrive\Documents\repos\powerbi\dashboard.xlsx" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]

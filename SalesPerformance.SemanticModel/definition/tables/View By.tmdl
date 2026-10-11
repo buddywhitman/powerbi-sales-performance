@@ -1,0 +1,42 @@
+table 'View By'
+
+	column 'View By'
+		dataType: string
+		summarizeBy: none
+		sourceColumn: [Value1]
+		sortByColumn: 'View By Order'
+
+		relatedColumnDetails
+			groupByColumn: 'View By Fields'
+
+	column 'View By Fields'
+		dataType: string
+		isHidden
+		summarizeBy: none
+		sourceColumn: [Value2]
+		sortByColumn: 'View By Order'
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 3,
+				  "kind": 2
+				}
+
+	column 'View By Order'
+		dataType: int64
+		isHidden
+		formatString: 0
+		summarizeBy: sum
+		sourceColumn: [Value3]
+
+	partition 'View By' = calculated
+		mode: import
+		source =
+				{
+					("Region", NAMEOF(Sales[Region]), 0),
+					("Product Category", NAMEOF(Sales[Product Category]), 1),
+					("Customer Segment", NAMEOF(Sales[Customer Segment]), 2),
+					("Channel", NAMEOF(Sales[Channel]), 3),
+					("Age Group", NAMEOF(Sales[Age Group]), 4),
+					("Sales Stage", NAMEOF(Sales[Sales Stage]), 5)
+				}

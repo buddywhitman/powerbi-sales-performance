@@ -1,0 +1,21 @@
+table 'Price Change'
+
+	/// What-if: percentage change applied to selling prices
+	measure 'Price Change Value' = SELECTEDVALUE('Price Change'[Price Change], 0)
+		formatString: 0%
+		displayFolder: What-If
+
+	column 'Price Change'
+		dataType: double
+		formatString: 0%
+		summarizeBy: none
+		sourceColumn: [Value]
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 0
+				}
+
+	partition 'Price Change' = calculated
+		mode: import
+		source = GENERATESERIES(-0.15, 0.15, 0.01)

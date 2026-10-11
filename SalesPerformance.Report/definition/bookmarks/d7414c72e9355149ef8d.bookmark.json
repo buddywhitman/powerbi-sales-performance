@@ -1,0 +1,35 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/bookmark/2.1.0/schema.json",
+  "displayName": "Table view",
+  "name": "d7414c72e9355149ef8d",
+  "options": {
+    "targetVisualNames": [
+      "cef688ed7342a87f1711",
+      "53c8990446f8ae1056de"
+    ],
+    "suppressData": true,
+    "suppressDisplay": false,
+    "suppressActiveSection": true,
+    "applyOnlyToTargetVisuals": false
+  },
+  "explorationState": {
+    "version": "1.3",
+    "activeSection": "a1b2c3d4e5f60718293a",
+    "sections": {
+      "a1b2c3d4e5f60718293a": {
+        "visualContainers": {
+          "cef688ed7342a87f1711": {
+            "singleVisual": {
+              "display": {
+                "mode": "hidden"
+              }
+            }
+          },
+          "53c8990446f8ae1056de": {
+            "singleVisual": {}
+          }
+        }
+      }
+    }
+  }
+}
